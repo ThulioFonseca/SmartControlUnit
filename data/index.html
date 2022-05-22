@@ -12,22 +12,24 @@
 
     <script type="text/javascript">
 
-        function FormPost(){            
+        function FormPost(){   
+
             $(document).ready(function(){
-                console.log('FormPost called');
+                
                 $("#CaixaDeSom").on('click', function(){
 
-                    var cmd = this.value;
                     if(this.checked){
-                        cmd = 1;
-                    }                        
-                
-                    console.log(cmd);
+                        this.value = 1;
+                    }else{
+                        this.value = 0;
+                    }                           
+                    //console.log(this.value);
+
                     $.ajax({
                         url: '/home/',
                         type : "POST",
                         data :{
-                                valueSoundSys: cmd
+                                CaixaDeSom: this.value
                               },
                         success : function(result) {
                             console.log(result);
@@ -41,9 +43,38 @@
 
 
         }
-       
+      
     </script>
+    <script>
 
+            function liveUpdate(){
+
+                    $(document).ready(function(){                      
+                            console.log("Entrei");
+                            $.ajax({
+                                    url: '/home/',
+                                    type : "GET",
+                                    data :{
+                                             CaixaDeSom : JSON.stringify(this.value)
+                                        },
+                                        success : function(result) {
+                                            console.log(result);
+                                                
+                                                if(result == "Caixa de som ligada"){
+                                                        $("#CaixaDeSom").prop('checked', true);
+                                                        console.log(result);
+                                                }
+                                            },
+                                        error: function() {
+
+                                                console.log(result);
+                                             }                          
+                                     });
+                                 });
+                   
+                }
+    </script>
+    
 
 </head>
 <body style="background-color: #121212;">    
@@ -67,23 +98,25 @@
                 <form class="col-md-6 text-light" action="/home/index.html" method="POST" id="MainForm">  
     
                     <div class="d-flex mx-5 my-2 px-5 form-check form-switch">
-                        <input class="form-check-input m-1 btn-default btn-lg "  name="valueSoundSys" value="0" onclick="FormPost();" type="checkbox" role="switch" id="CaixaDeSom" />
+                        <input class="form-check-input m-1 btn-default btn-lg "  name="CaixaDeSom" value="0" onclick="FormPost();" type="checkbox" role="switch" id="CaixaDeSom" />
                         <label class="form-check-label mx-2" for="CaixaDeSom">Sistema de Som</label>                      
                     </div>
                     <div class="d-flex mx-5 my-2 px-5 form-check form-switch">
-                        <input class="form-check-input m-1 btn-default btn-lg"  name="valueFitaLed" value="1" onclick="submit();" type="checkbox" role="switch" id="FitaLed" />
+                        <input class="form-check-input m-1 btn-default btn-lg"  name="FitaLed" value="0" onclick="FormPost();" type="checkbox" role="switch" id="FitaLed" />
                         <label class="form-check-label mx-2" for="FitaLed">RGB Ambiente</label>                      
                     </div>
                     <div class="d-flex mx-5 my-2 px-5 form-check form-switch">
-                        <input class="form-check-input m-1 btn-default btn-lg"  name="valueLedPc" value="1" onclick="submit();" type="checkbox" role="switch" id="LedPc" />
+                        <input class="form-check-input m-1 btn-default btn-lg"  name="LedPc" value="0" onclick="FormPost();" type="checkbox" role="switch" id="LedPc" />
                         <label class="form-check-label mx-2" for="LedPc">RGB do Computador</label>                      
-                    </div>
-                    <div>
-                        <button class="btn" type="submit">Enviar</button>
                     </div>
                 </form>
 
                 
+            </div>
+
+            <div>
+
+                <button class="btn" id="update" onclick="liveUpdate()" >Update</button>
             </div>
     
         </div>                  

@@ -54,35 +54,53 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(115200);
+  String CaixaDeSomStatus = "Caixa de som desligada";
   
   NetConfig();
   ServerConfig();
 
   
-  servidor.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(200, "text/plain", "ESP conectado ao wifi");
+  // servidor.on("/home",HTTP_GET, [](AsyncWebServerRequest *request){
+  //   request->send(LittleFS,"index.html");
+  // });
+
+  servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request){    
+    if(request->hasArg("CaixaDeSom")){
+            if(CaixaDeSomStatus = "Ligada"){
+              request->send(200, "text/plain", "Caixa de som ligada");
+            }else if(CaixaDeSomStatus = "Desligada"){
+              request->send(200, "text/plain", "Caixa de som desligada");
+            }else {
+                  request->send(200, "text/plain", "Caixa de som não configurada");
+                }
+    }else{
+      request->send(200, "text/plain", "Argumento Nulo");
+    
+    }
+    
   });
 
-  servidor.on("/home/",HTTP_POST, []( AsyncWebServerRequest *request){
+  servidor.on("/home/",HTTP_POST, [&]( AsyncWebServerRequest *request){
 
       Serial.println("POST Recebido");
 
        String inputString;
 
-       if(request->hasArg("valueSoundSys")){
-          inputString = request->arg("valueSoundSys");
+       if(request->hasArg("CaixaDeSom")){
+          inputString = request->arg("CaixaDeSom");
 
           if(inputString == "1"){
+            CaixaDeSomStatus = "Ligada";
             digitalWrite(LED_BUILTIN, LOW);
-            request->send(200, "text/plain", "Ligado");           
-         }else{
+            request->send(200, "text/plain", "Caixa de Som - Ligada");           
+         }else if(inputString = "0"){
+            CaixaDeSomStatus = "Desligada";
             digitalWrite(LED_BUILTIN, HIGH);
-            request->send(200, "text/plain", "Desligado");
-         }
-         
-        //  else {
-        //     request->send(406, "text/plain", "Argumento invalido");
-        //   }
+            request->send(200, "text/plain", "Caixa de Som - Desligada");
+         }         
+         else {
+            request->send(406, "text/plain", "Argumento invalido");
+          }
 
        }
   });
