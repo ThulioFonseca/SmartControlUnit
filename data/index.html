@@ -54,20 +54,19 @@
                             $.ajax({
                                     url: '/home/',
                                     type : "GET",
-                                    data :{
-                                             CaixaDeSom : JSON.stringify(this.value)
-                                        },
                                         success : function(result) {
-                                            console.log(result);
-                                                
-                                                if(result == "Caixa de som ligada"){
+                                                console.log(result);                                                
+                                                if(result == "Ligado"){
                                                         $("#CaixaDeSom").prop('checked', true);
+                                                        console.log(result);
+                                                }else if (result == "Desligado"){
+                                                        $("#CaixaDeSom").prop('checked', false);
                                                         console.log(result);
                                                 }
                                             },
-                                        error: function() {
+                                        error: function(result) {
 
-                                                console.log(result);
+                                                console.log(result + "Erro");
                                              }                          
                                      });
                                  });

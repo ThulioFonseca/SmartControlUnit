@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include <ArduinoJson.h>
+#include <AsyncJson.h>
 #include <ESP8266WiFi.h>          
 #include <DNSServer.h>
 #include <LittleFS.h>          
@@ -8,7 +10,12 @@
 AsyncWebServer servidor(80);
 const char* ssid     = "Oi velox";            // The SSID (name) of the Wi-Fi network you want to connect to
 const char* password = "Oi130987";            // The password of the Wi-Fi network
-int count = 0;       
+int count = 0;
+String CaixaDeSomStatus = "Desligado";
+  String FitaLedStatus = "teste";
+  String LedPcStatus = "teste";
+
+
 
 void Spinner(int counter)                         //Load Console Spinner
     {
@@ -50,35 +57,24 @@ void ServerConfig(){
   
 }
 
+
 void setup() {
 
-  pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200);
-  String CaixaDeSomStatus = "Caixa de som desligada";
-  
   NetConfig();
   ServerConfig();
 
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(115200);
+  
+
+  String json = "{\"CaixaDeSomStatus\":\"" + CaixaDeSomStatus + "\"}";
+  
   
   // servidor.on("/home",HTTP_GET, [](AsyncWebServerRequest *request){
   //   request->send(LittleFS,"index.html");
   // });
 
-  servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request){    
-    if(request->hasArg("CaixaDeSom")){
-            if(CaixaDeSomStatus = "Ligada"){
-              request->send(200, "text/plain", "Caixa de som ligada");
-            }else if(CaixaDeSomStatus = "Desligada"){
-              request->send(200, "text/plain", "Caixa de som desligada");
-            }else {
-                  request->send(200, "text/plain", "Caixa de som não configurada");
-                }
-    }else{
-      request->send(200, "text/plain", "Argumento Nulo");
-    
-    }
-    
-  });
+
 
   servidor.on("/home/",HTTP_POST, [&]( AsyncWebServerRequest *request){
 
@@ -90,11 +86,11 @@ void setup() {
           inputString = request->arg("CaixaDeSom");
 
           if(inputString == "1"){
-            CaixaDeSomStatus = "Ligada";
+            CaixaDeSomStatus = "Ligado";
             digitalWrite(LED_BUILTIN, LOW);
             request->send(200, "text/plain", "Caixa de Som - Ligada");           
          }else if(inputString = "0"){
-            CaixaDeSomStatus = "Desligada";
+            CaixaDeSomStatus = "Desligado";
             digitalWrite(LED_BUILTIN, HIGH);
             request->send(200, "text/plain", "Caixa de Som - Desligada");
          }         
@@ -105,9 +101,22 @@ void setup() {
        }
   });
 
+    servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request){
+    AsyncResponseStream *response = request->beginResponseStream("application/json");
+    DynamicJsonDocument doc(1024);    
+    JsonObject obj = doc.to<JsonObject>();   
+    obj[String("CaixaDeSomStatus")] = CaixaDeSomStatus;
+    obj[String("FitaLedStatus")] = FitaLedStatus;
+    obj[String("LedPcStatus")] = LedPcStatus;
+    serializeJson(doc, *response);  
+    request->send(response);    
+      
+
+  });
+
+
 }
 
 void loop() {
 }
-
-     
+  
