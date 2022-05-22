@@ -40,6 +40,52 @@
                         }
                     })
                 });
+                $("#FitaLed").on('click', function(){
+
+                    if(this.checked){
+                        this.value = 1;
+                    }else{
+                        this.value = 0;
+                    }                           
+                    //console.log(this.value);
+
+                    $.ajax({
+                        url: '/home/',
+                        type : "POST",
+                        data :{
+                                FitaLed: this.value
+                              },
+                        success : function(result) {
+                            console.log(result);
+                        },
+                        error: function() {
+                            console.log(result);
+                        }
+                    })
+                });
+                $("#LedPc").on('click', function(){
+
+                    if(this.checked){
+                        this.value = 1;
+                    }else{
+                        this.value = 0;
+                    }                           
+                    //console.log(this.value);
+
+                    $.ajax({
+                        url: '/home/',
+                        type : "POST",
+                        data :{
+                                LedPc: this.value
+                              },
+                        success : function(result) {
+                            console.log(result);
+                        },
+                        error: function() {
+                            console.log(result);
+                        }
+                    })
+                });
         });
 
 
@@ -58,17 +104,24 @@
                                 dataType: "json",
                                 contentType: "application/json; charset=utf-8",
                                     success : function(result) {
-                                            
-                                            // console.log(result.CaixaDeSomStatus);                                                
+                                                                                    
+                                            console.log(result.CaixaDeSomStatus);                                                
                                             if(result.CaixaDeSomStatus == "Ligado"){
-                                                    $("#CaixaDeSom").prop('checked', true);
-                                                    
-                                                    console.log(result);
+                                                    $("#CaixaDeSom").prop('checked', true);                                                    
                                             }else if (result.CaixaDeSomStatus == "Desligado"){
                                                     $("#CaixaDeSom").prop('checked', false);
-                                                    
-                                                    console.log(result);
                                             }
+                                            if(result.FitaLedStatus == "Ligado"){
+                                                    $("#FitaLed").prop('checked', true);
+                                            }else if (result.FitaLedStatus == "Desligado"){
+                                                    $("#FitaLed").prop('checked', false);
+                                            }
+                                            if(result.LedPcStatus == "Ligado"){
+                                                    $("#LedPc").prop('checked', true);
+                                            }else if (result.LedPcStatus == "Desligado"){
+                                                    $("#LedPc").prop('checked', false);
+                                            }
+                                             console.log(result);
                                         },
                                     error: function(result) {
 

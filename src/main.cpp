@@ -12,8 +12,8 @@ const char* ssid     = "Oi velox";            // The SSID (name) of the Wi-Fi ne
 const char* password = "Oi130987";            // The password of the Wi-Fi network
 int count = 0;
 String CaixaDeSomStatus = "Desligado";
-String FitaLedStatus = "teste";
-String LedPcStatus = "teste";
+String FitaLedStatus = "Desligado";
+String LedPcStatus = "Desligado";
 
 
 
@@ -96,6 +96,44 @@ void setup() {
             CaixaDeSomStatus = "Desligado";
             digitalWrite(LED_BUILTIN, HIGH);
             request->send(200, "text/plain", "Caixa de Som - Desligada");
+          }         
+         else {
+            request->send(406, "text/plain", "Argumento invalido");
+          }
+
+        }
+        if(request->hasArg("FitaLed")){
+
+          FitaLedCMD = request->arg("FitaLed");
+
+          if(FitaLedCMD == "1")
+          {
+            FitaLedStatus = "Ligado";
+            request->send(200, "text/plain", "Fita Led - Ligada");
+
+          }else if(FitaLedCMD = "0")
+          {
+            FitaLedStatus = "Desligado";
+            request->send(200, "text/plain", "Fita Led - Desligada");
+          }         
+         else {
+            request->send(406, "text/plain", "Argumento invalido");
+          }
+
+        }
+        if(request->hasArg("LedPc")){
+
+          LedPcCMD = request->arg("LedPc");
+
+          if(LedPcCMD == "1")
+          {
+            LedPcStatus = "Ligado";
+            request->send(200, "text/plain", "Led PC - Ligada");
+
+          }else if(LedPcCMD = "0")
+          {
+            LedPcStatus = "Desligado";
+            request->send(200, "text/plain", "Led PC - Desligada");
           }         
          else {
             request->send(406, "text/plain", "Argumento invalido");
