@@ -143,15 +143,17 @@ void setup() {
   });
 
     servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request){
-    AsyncResponseStream *response = request->beginResponseStream("application/json");
-    DynamicJsonDocument doc(1024);    
-    JsonObject obj = doc.to<JsonObject>();   
-    obj[String("CaixaDeSomStatus")] = CaixaDeSomStatus;
-    obj[String("FitaLedStatus")] = FitaLedStatus;
-    obj[String("LedPcStatus")] = LedPcStatus;
-    serializeJson(doc, *response);  
-    request->send(response);    
-      
+
+    
+        AsyncResponseStream *response = request->beginResponseStream("application/json");
+        DynamicJsonDocument doc(1024);    
+        JsonObject obj = doc.to<JsonObject>();   
+        obj[String("CaixaDeSomStatus")] = CaixaDeSomStatus;
+        obj[String("FitaLedStatus")] = FitaLedStatus;
+        obj[String("LedPcStatus")] = LedPcStatus;
+        serializeJson(doc, *response);  
+        request->send(response);  
+
 
   });
 

@@ -17,12 +17,14 @@
 
             $(document).ready(function(){
                 
-                $("#CaixaDeSom").on('click', function(){
+                $("#CaixaDeSom").on('click', function(){                    
 
                     if(this.checked){
                         this.value = 1;
+                       $("#CaixaDeSomDiv").show();
                     }else{
                         this.value = 0;
+                        $("#CaixaDeSomDiv").hide();
                     }                           
                     //console.log(this.value);
 
@@ -44,8 +46,10 @@
 
                     if(this.checked){
                         this.value = 1;
+                        $("#FitaLedDiv").show();
                     }else{
                         this.value = 0;
+                        $("#FitaLedDiv").hide();
                     }                           
                     //console.log(this.value);
 
@@ -67,8 +71,10 @@
 
                     if(this.checked){
                         this.value = 1;
+                        $("#LedPcDiv").show();
                     }else{
                         this.value = 0;
+                        $("#LedPcDiv").hide();
                     }                           
                     //console.log(this.value);
 
@@ -107,19 +113,25 @@
                                                                                     
                                             console.log(result.CaixaDeSomStatus);                                                
                                             if(result.CaixaDeSomStatus == "Ligado"){
-                                                    $("#CaixaDeSom").prop('checked', true);                                                    
+                                                    $("#CaixaDeSom").prop('checked', true);
+                                                    $("#CaixaDeSomDiv").show();                                                    
                                             }else if (result.CaixaDeSomStatus == "Desligado"){
                                                     $("#CaixaDeSom").prop('checked', false);
+                                                    $("#CaixaDeSomDiv").hide();
                                             }
                                             if(result.FitaLedStatus == "Ligado"){
                                                     $("#FitaLed").prop('checked', true);
+                                                    $("#FitaLedDiv").show();
                                             }else if (result.FitaLedStatus == "Desligado"){
                                                     $("#FitaLed").prop('checked', false);
+                                                    $("#FitaLedDiv").hide();
                                             }
                                             if(result.LedPcStatus == "Ligado"){
                                                     $("#LedPc").prop('checked', true);
+                                                    $("#LedPcDiv").show();
                                             }else if (result.LedPcStatus == "Desligado"){
                                                     $("#LedPc").prop('checked', false);
+                                                    $("#LedPcDiv").hide();
                                             }
                                              console.log(result);
                                         },
@@ -164,11 +176,81 @@
                     </div>
                     <div class="d-flex mx-5 my-2 px-5 form-check form-switch">
                         <input class="form-check-input m-1 btn-default btn-lg"  name="FitaLed" value="0" onclick="FormPost();" type="checkbox" role="switch" id="FitaLed" />
-                        <label class="form-check-label mx-2" for="FitaLed">RGB Ambiente</label>                      
+                        <label class="form-check-label mx-2" for="FitaLed">Iluminação Secundária</label>                      
                     </div>
                     <div class="d-flex mx-5 my-2 px-5 form-check form-switch">
                         <input class="form-check-input m-1 btn-default btn-lg"  name="LedPc" value="0" onclick="FormPost();" type="checkbox" role="switch" id="LedPc" />
                         <label class="form-check-label mx-2" for="LedPc">RGB do Computador</label>                      
+                    </div>
+                </form>
+
+                
+            </div>
+   
+        </div>
+
+           <div id="CaixaDeSomDiv" class="container col-md-6 h-100 mt-4 mb-3 py-4 shadow" style="display: none; background-color: #191919; border-radius:30px;" >
+
+            <h3 class="fs-5 text-center text-light fw-light">Controles do Sistema de Som</h2>
+    
+            <div class="d-flex justify-content-center mx-auto my-3">   
+    
+                <form class="col-md-6 text-light" action="/home/index.html"  method="POST" id="CaixaDeSomForm">  
+    
+                    <div class="d-flex mx-1 my-2 px-1 form-check form-switch  justify-content-center">
+                     
+                        <label for="customRange1" class="form-label fs-6 fw-lighter">Volume</label>
+
+                        <div class="col-md-6">
+                            <input type="range" class="form-range mx-3" id="customRange1">
+                        </div>
+
+                    </div>
+                </form>
+
+                
+            </div>
+   
+        </div>
+        <div id="FitaLedDiv" class="container col-md-6 h-100 mt-4 mb-3 py-4 shadow" style="display: none; background-color: #191919; border-radius:30px;" >
+
+            <h3 class="fs-5 text-center text-light fw-light">Controles da Iluminação Secundária</h2>
+    
+            <div class="d-flex justify-content-center mx-auto my-3">   
+    
+                <form class="col-md-6 text-light" action="/home/index.html"  method="POST" id="FitaLedForm">  
+    
+                    <div class="d-flex mx-1 my-2 px-1 form-check form-switch  justify-content-center">
+                     
+                        <label for="customRange1" class="form-label fs-6 fw-lighter">Cor da Iluminação</label>
+
+                        <div class="col-md-6">
+                            <input type="range" class="form-range mx-3" id="customRange1">
+                        </div>
+
+                    </div>
+                </form>
+
+                
+            </div>
+   
+        </div>  
+        <div  id="LedPcDiv" class="container col-md-6 h-100 mt-4 mb-3 py-4 shadow" style="display: none; background-color: #191919; border-radius:30px;">
+
+            <h3 class="fs-5 text-center text-light fw-light">Controles do RGB do Computador</h2>
+    
+            <div class="d-flex justify-content-center mx-auto my-3">   
+    
+                <form class="col-md-6 text-light" action="/home/index.html"  method="POST" id="LedPcForm">  
+    
+                    <div class="d-flex mx-1 my-2 px-1 form-check form-switch  justify-content-center">
+                     
+                        <label for="customRange1" class="form-label fs-6 fw-lighter">Cor da Iluminação do PC</label>
+
+                        <div class="col-md-6">
+                            <input type="range" class="form-range mx-3" id="customRange1">
+                        </div>
+
                     </div>
                 </form>
 
