@@ -5,8 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
     <!-- <meta http-equiv="refresh" content="5" > -->
     <title>Advanced Control Unit</title>
 
@@ -21,10 +22,10 @@
 
                     if(this.checked){
                         this.value = 1;
-                       $("#CaixaDeSomDiv").show();
+                       $("#CaixaDeSomDiv").fadeIn(200);
                     }else{
                         this.value = 0;
-                        $("#CaixaDeSomDiv").hide();
+                        $("#CaixaDeSomDiv").fadeOut(200);
                     }                           
                     //console.log(this.value);
 
@@ -46,10 +47,10 @@
 
                     if(this.checked){
                         this.value = 1;
-                        $("#FitaLedDiv").show();
+                        $("#FitaLedDiv").fadeIn(200);
                     }else{
                         this.value = 0;
-                        $("#FitaLedDiv").hide();
+                        $("#FitaLedDiv").fadeOut(200);
                     }                           
                     //console.log(this.value);
 
@@ -71,10 +72,10 @@
 
                     if(this.checked){
                         this.value = 1;
-                        $("#LedPcDiv").show();
+                        $("#LedPcDiv").fadeIn(200);
                     }else{
                         this.value = 0;
-                        $("#LedPcDiv").hide();
+                        $("#LedPcDiv").fadeOut(200);
                     }                           
                     //console.log(this.value);
 
@@ -114,24 +115,24 @@
                                             console.log(result.CaixaDeSomStatus);                                                
                                             if(result.CaixaDeSomStatus == "Ligado"){
                                                     $("#CaixaDeSom").prop('checked', true);
-                                                    $("#CaixaDeSomDiv").show();                                                    
+                                                    $("#CaixaDeSomDiv").fadeIn(200);                                                    
                                             }else if (result.CaixaDeSomStatus == "Desligado"){
                                                     $("#CaixaDeSom").prop('checked', false);
-                                                    $("#CaixaDeSomDiv").hide();
+                                                    $("#CaixaDeSomDiv").fadeOut(200);
                                             }
                                             if(result.FitaLedStatus == "Ligado"){
                                                     $("#FitaLed").prop('checked', true);
-                                                    $("#FitaLedDiv").show();
+                                                    $("#FitaLedDiv").fadeIn(200);
                                             }else if (result.FitaLedStatus == "Desligado"){
                                                     $("#FitaLed").prop('checked', false);
-                                                    $("#FitaLedDiv").hide();
+                                                    $("#FitaLedDiv").fadeOut(200);
                                             }
                                             if(result.LedPcStatus == "Ligado"){
                                                     $("#LedPc").prop('checked', true);
-                                                    $("#LedPcDiv").show();
+                                                    $("#LedPcDiv").fadeIn(200);
                                             }else if (result.LedPcStatus == "Desligado"){
                                                     $("#LedPc").prop('checked', false);
-                                                    $("#LedPcDiv").hide();
+                                                    $("#LedPcDiv").fadeOut(200);
                                             }
                                              console.log(result);
                                         },
@@ -146,6 +147,33 @@
                 function UpdateRoutine(){
                     setInterval(liveUpdate, 2000);
                 }
+
+                var colorPicker = new iro.ColorPicker('#FitaLedPicker', {
+                layout: [
+                    { 
+                    component: iro.ui.Slider,
+                    options: {
+                        // can also be 'saturation', 'value', 'red', 'green', 'blue', 'alpha' or 'kelvin'
+                        sliderType: 'hue'
+                    }
+                    },
+                ],
+                width: 250,
+                
+                });
+                var colorPicker = new iro.ColorPicker('#LedPcPicker', {
+                layout: [
+                    { 
+                    component: iro.ui.Slider,
+                    options: {
+                        // can also be 'saturation', 'value', 'red', 'green', 'blue', 'alpha' or 'kelvin'
+                        sliderType: 'hue'
+                    }
+                    },
+                ],
+                width: 250,
+                
+                });
     </script>
     
 
@@ -164,7 +192,18 @@
     </div>   
         <div class="container col-md-6 h-100 mt-4 mb-3 py-4 shadow" style="background-color: #191919; border-radius:30px;">
 
-            <h3 class="fs-3 text-center text-light fw-light">Controle de Dispositivos</h2>
+            <h3 class="fs-5 row text-center text-light self-align-center fw-light">
+                <span style="color:#10d7ff;" class="material-symbols-outlined fs-1">settings </span>  
+                <div>
+                    <span class="fs-2">Controle de Dispositivos</span>
+                </div> 
+            </h3>
+
+             
+                <div class="d-flex justify-content-center">
+                    <hr class="col-9 mt-1 mb-2" style="color: #37deff ;">
+                </div>
+    
     
             <div class="d-flex justify-content-center mx-auto my-3">   
     
@@ -189,9 +228,23 @@
    
         </div>
 
-           <div id="CaixaDeSomDiv" class="container col-md-6 h-100 mt-4 mb-3 py-4 shadow" style="display: none; background-color: #191919; border-radius:30px;" >
+           <div id="CaixaDeSomDiv" class="container col-md-6 h-100 mt-4 mb-3 py-3 shadow" style="display: none; background-color: #191919; border-radius:30px;" >
+            <div class=>
+                    
+                    
+                    <h3 class="fs-5 row text-center text-light self-align-center fw-light">
+                        <span style="color:#10d7ff;" class="material-symbols-outlined fs-1">volume_up </span>  
+                        <div>
+                            <span class="fs-4">Sistema de Som</span>
+                        </div> 
+                    </h3>
 
-            <h3 class="fs-5 text-center text-light fw-light">Controles do Sistema de Som</h2>
+            </div>
+
+                <div class="d-flex justify-content-center">
+                    <hr class="col-6 mt-1 mb-3" style="color: #37deff ;">
+                </div>
+    
     
             <div class="d-flex justify-content-center mx-auto my-3">   
     
@@ -214,7 +267,16 @@
         </div>
         <div id="FitaLedDiv" class="container col-md-6 h-100 mt-4 mb-3 py-4 shadow" style="display: none; background-color: #191919; border-radius:30px;" >
 
-            <h3 class="fs-5 text-center text-light fw-light">Controles da Iluminação Secundária</h2>
+            <h3 class="fs-5 row text-center text-light self-align-center fw-light">
+                <span style="color:#10d7ff;" class="material-symbols-outlined fs-1">emoji_objects </span>  
+                <div>
+                    <span class="fs-4">Iluminação Secundária</span>
+                </div> 
+            </h3>
+            <div class="d-flex justify-content-center">
+                <hr class="col-6 mt-1 mb-3" style="color: #37deff ;">
+            </div>
+    
     
             <div class="d-flex justify-content-center mx-auto my-3">   
     
@@ -222,11 +284,9 @@
     
                     <div class="d-flex mx-1 my-2 px-1 form-check form-switch  justify-content-center">
                      
-                        <label for="customRange1" class="form-label fs-6 fw-lighter">Cor da Iluminação</label>
-
-                        <div class="col-md-6">
-                            <input type="range" class="form-range mx-3" id="customRange1">
-                        </div>
+                        <label for="customRange1" class="form-label fs-6 fw-lighter">Cor:</label>
+                        
+                        <div id="FitaLedPicker" class="mx-3"></div>
 
                     </div>
                 </form>
@@ -235,9 +295,17 @@
             </div>
    
         </div>  
-        <div  id="LedPcDiv" class="container col-md-6 h-100 mt-4 mb-3 py-4 shadow" style="display: none; background-color: #191919; border-radius:30px;">
+        <div  id="LedPcDiv" class="container col-md-6 h-100 mt-4 mb-3 py-4 text-center shadow" style="display: none; background-color: #191919; border-radius:30px;">
 
-            <h3 class="fs-5 text-center text-light fw-light">Controles do RGB do Computador</h2>
+            <h3 class="fs-5 row text-center text-light self-align-center fw-light">
+                <span style="color:#10d7ff;" class="material-symbols-outlined fs-1">mode_fanmode_fanmode_fan</span>  
+                <div>
+                    <span class="fs-4">RGB do Computador</span>
+                </div> 
+            </h3>
+            <div class="d-flex justify-content-center">
+                <hr class="col-6 mt-1 mb-3" style="color: #37deff ;">
+            </div>
     
             <div class="d-flex justify-content-center mx-auto my-3">   
     
@@ -245,11 +313,9 @@
     
                     <div class="d-flex mx-1 my-2 px-1 form-check form-switch  justify-content-center">
                      
-                        <label for="customRange1" class="form-label fs-6 fw-lighter">Cor da Iluminação do PC</label>
+                        <label for="customRange1" class="form-label fs-6 fw-lighter">Cor:</label>
 
-                        <div class="col-md-6">
-                            <input type="range" class="form-range mx-3" id="customRange1">
-                        </div>
+                        <div id="LedPcPicker" class=" mx-3"></div>
 
                     </div>
                 </form>
