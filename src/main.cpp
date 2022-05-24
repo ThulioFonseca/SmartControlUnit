@@ -75,7 +75,7 @@ void setup() {
   
   servidor.on("/home/",HTTP_POST, [&]( AsyncWebServerRequest *request){
 
-      Serial.println("-> POST Request on /home/ - " + request->client()->remoteIP().toString());    //System Log
+      Serial.println("-> POST Request on /home/ - " + request->params());    //System Log
 
       String CaixaDeSomCMD;
       String FitaLedCMD;

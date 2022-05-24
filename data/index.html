@@ -11,7 +11,130 @@
     <title>Advanced Control Unit</title>
 
 </head>
-<body style="background-color: #121212;" onload="UpdateRoutine()">
+<body style="background-color: #121212; max-width: 100%; overflow-x: hidden;" onload="UpdateRoutine()">
+
+    <style>
+
+            #switch{
+                top: 2%;
+                left: 2%;
+                width: 75px;
+                height: 40px;
+            }
+
+            .toggle{
+                position:  relative;
+                border: 2px solid #444249;
+                border-radius: 20px;
+                -webkit-transition: border-color .6s  ease-out;
+                transition: border-color .6s  ease-out;
+                box-sizing: border-box;
+            }
+
+            .toggle.toggle-on{
+                border-color: rgba(137, 194, 217, .4);
+                -webkit-transition: all .5s .15s ease-out;
+                transition: all .5s .15s ease-out;
+            }
+
+            .toggle-button{
+                position: absolute;
+                top: 4px;
+                width: 28px;
+                bottom: 4px;
+                right: 39px;
+                background-color: #444249;
+                border-radius: 19px; 
+                cursor: pointer;
+                -webkit-transition: all .3s .1s, width .1s, top .1s, bottom .1s;
+                transition: all .3s .1s, width .1s, top .1s, bottom .1s;
+            }
+
+            .toggle-on .toggle-button{
+                top: 3px;
+                width: 65px;
+                bottom: 3px;
+                right: 3px;
+                border-radius: 23px;
+                background-color: #89c2da;
+                box-shadow: 0 0 16px #4b7a8d;
+                -webkit-transition: all .2s .1s, right .1s;
+                transition: all .2s .1s, right .1s;
+            }
+
+
+            .toggle-text-on{
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                line-height: 36px;
+                text-align: center;
+                font-family: 'Quicksand', sans-serif;
+                font-size: 18px;
+                font-weight: normal;
+                cursor: pointer;
+                -webkit-user-select: none; /* Chrome/Safari */    
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* IE10+ */
+
+
+                color: rgba(0,0,0,0);
+            }
+
+            .toggle-on .toggle-text-on{
+                color: #3b6a7d;
+                -webkit-transition: color .3s .15s ;
+                transition: color .3s .15s ;
+            }
+
+            .toggle-text-off{
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 6px;
+                line-height: 36px;
+                text-align: center;
+                font-family: 'Quicksand', sans-serif;
+                font-size: 14px;
+                font-weight: bold;
+                -webkit-user-select: none; /* Chrome/Safari */        
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* IE10+ */
+
+                cursor: pointer;
+
+                color: #444249;
+            }
+
+            .toggle-on .toggle-text-off{
+                color: rgba(0,0,0,0);
+            }
+
+            /* used for streak effect */
+            .glow-comp{
+                position: absolute;
+                opacity: 0;
+                top: 10px;
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                border-radius: 6px;
+                background-color: rgba(75, 122, 141, .1);
+                box-shadow: 0 0 12px rgba(75, 122, 141, .2);
+                -webkit-transition: opacity 4.5s 1s;
+                transition: opacity 4.5s 1s;
+            }
+
+            .toggle-on .glow-comp{
+                opacity: 1;
+                -webkit-transition: opacity 1s;
+                transition: opacity 1s;
+            }
+
+
+    </style>
 
    <!--======================================================================[ Nav-Bar ]==================================================================  -->
         
@@ -47,26 +170,41 @@
         <div class="d-flex justify-content-center mx-auto my-3"> 
             <form class="col-md-6 text-light" action="/home/index.html"  method="POST" id="MainForm">  
                 <div class="d-flex mx-1 my-2 px-1 form-check form-switch justify-content-between" id="divCaixaDeSom"  name="divCaixaDeSom">
-                    <div class="col-md-4 d-flex justify-content-end">
-                        <input class="form-check-input m-1 btn-default btn-lg" name="CaixaDeSom" value="0" type="checkbox" role="switch" id="CaixaDeSom" />
-                    </div>
-                    <div class="col-md-7">
-                        <label class="form-check-label mx-2" for="CaixaDeSom">Sistema de Som</label> 
+                    <div id="toggleCaixaDeSom" class="col-md-5 d-flex justify-content-end">
+                        <div class='toggle' style=" transform: scale(0.8) ;" id='switch'>
+                            <div class='toggle-text-off'>OFF</div>
+                            <div class='glow-comp'></div>
+                            <div class='toggle-button'></div>
+                            <div class='toggle-text-on'>ON</div>
+                        </div>
+                   </div> 
+                   <div class="col-md-7 align-self-center">
+                        <label class="form-check-label mx-2 " for="CaixaDeSom">Sistema de Som</label> 
                     </div>                     
                 </div>
                 <div class="d-flex mx-1 my-2 px-1 form-check form-switch justify-content-between">
-                    <div class="col-md-4 d-flex justify-content-end">
-                        <input class="form-check-input m-1 btn-default btn-lg "  name="FitaLed" value="0" type="checkbox" role="switch" id="FitaLed" />
-                    </div>
-                    <div class="col-md-7">
-                        <label class="form-check-label mx-2" for="FitaLed">Iluminação Secundária</label>                      
+                    <div id="toggleFitaLed" class="col-md-5 d-flex justify-content-end">
+                        <div class='toggle' style=" transform: scale(0.8) ;" id='switch'>
+                            <div class='toggle-text-off'>OFF</div>
+                            <div class='glow-comp'></div>
+                            <div class='toggle-button'></div>
+                            <div class='toggle-text-on'>ON</div>
+                        </div>
+                   </div> 
+                   <div class="col-md-7 align-self-center">
+                        <label class="form-check-label mx-2 " for="FitaLed">Iluminação Secundária</label>                      
                     </div>
                 </div>
                 <div class="d-flex mx-1 my-2 px-1 form-check form-switch justify-content-between">
-                    <div class="col-md-4 d-flex justify-content-end">
-                        <input class="form-check-input m-1 btn-default btn-lg"  name="LedPc" value="0" type="checkbox" role="switch" id="LedPc" />
-                    </div>
-                    <div class="col-md-7">
+                    <div id="toggleLedPc" class="col-md-5 d-flex justify-content-end">
+                        <div class='toggle' style=" transform: scale(0.8) ;" id='switch'>
+                            <div class='toggle-text-off'>OFF</div>
+                            <div class='glow-comp'></div>
+                            <div class='toggle-button'></div>
+                            <div class='toggle-text-on'>ON</div>
+                        </div>
+                    </div> 
+                    <div class="col-md-7 align-self-center">
                         <label class="form-check-label mx-2" for="LedPc">RGB do Computador</label> 
                     </div>                     
                 </div>
@@ -165,21 +303,29 @@
 <!-- ========================================================================[ Scripts ]================================================================= -->
         
     <script type="text/javascript">
-        
-            $("#CaixaDeSom").on('click', function(){                  
-                if(this.checked){
-                    this.value = 1;
+
+            $("#toggleCaixaDeSom").on('click',function(e){
+                e.preventDefault(); // The flicker is a codepen thing                
+
+                var status = this.classList.contains('toggle-on');
+                var value = 0;
+                console.log(status);
+
+                $(this).toggleClass('toggle-on');
+
+                if(status){                    
+                    value = 0;
+                    $("#CaixaDeSomDiv").fadeOut(200);                    
+                }else{                    
+                    value = 1;
                     $("#CaixaDeSomDiv").fadeIn(200);
-                }else{
-                    this.value = 0;
-                    $("#CaixaDeSomDiv").fadeOut(200);
                 }
 
                 $.ajax({
                     url: '/home/',
                     type : "POST",
                     data :{
-                            CaixaDeSom: this.value
+                            CaixaDeSom: value
                             },
                     success : function(result) {
                         console.log(result);
@@ -188,24 +334,30 @@
                         console.log(result);
                     }
                 });
-
             });
 
-            $("#FitaLed").on('click', function(){
+            $("#toggleFitaLed").on('click',function(e){
+                e.preventDefault(); // The flicker is a codepen thing                
 
-                if(this.checked){
-                    this.value = 1;
+                var status = this.classList.contains('toggle-on');
+                var value = 0;
+                console.log(status);
+
+                $(this).toggleClass('toggle-on');
+
+                if(status){                    
+                    value = 0;
+                    $("#FitaLedDiv").fadeOut(200);                    
+                }else{                    
+                    value = 1;
                     $("#FitaLedDiv").fadeIn(200);
-                }else{
-                    this.value = 0;
-                    $("#FitaLedDiv").fadeOut(200);
-                }                           
-                    
+                }
+
                 $.ajax({
                     url: '/home/',
                     type : "POST",
                     data :{
-                            FitaLed: this.value
+                            FitaLed: value
                             },
                     success : function(result) {
                         console.log(result);
@@ -216,33 +368,44 @@
                 });
             });
 
-            $("#LedPc").on('click', function(){
+            $("#toggleLedPc").on('click',function(e){
+                e.preventDefault(); // The flicker is a codepen thing                
 
-                if(this.checked){
-                    this.value = 1;
+                var status = this.classList.contains('toggle-on');
+                var value = 0;
+                console.log(status);
+
+                $(this).toggleClass('toggle-on');
+
+                if(status){                    
+                    value = 0;
+                    $("#LedPcDiv").fadeOut(200);                    
+                }else{                    
+                    value = 1;
                     $("#LedPcDiv").fadeIn(200);
-                }else{
-                    this.value = 0;
-                    $("#LedPcDiv").fadeOut(200);
-                }                           
-                
+                }
+
                 $.ajax({
                     url: '/home/',
                     type : "POST",
                     data :{
-                            LedPc: this.value
-                        },
+                            LedPc: value
+                            },
                     success : function(result) {
                         console.log(result);
                     },
                     error: function() {
                         console.log(result);
                     }
-                    });
-
-            }); 
-            
+                });
+            });
+        
             function liveUpdate(){
+                
+                var CaixaDeSom_LocalStatus = $("#toggleCaixaDeSom").hasClass('toggle-on');
+                var FitaLed_LocalStatus = $("#toggleFitaLed").hasClass('toggle-on');
+                var LedPc_LocalStatus = $("#toggleLedPc").hasClass('toggle-on');
+
                     //console.log("Live Update chamada");
                     $.ajax({
                         url: '/home/',
@@ -251,27 +414,26 @@
                         dataType: "json",
                         contentType: "application/json; charset=utf-8",
                         success : function(result) {
-                                                                        
-                                console.log(result.CaixaDeSomStatus);                                                
-                                if(result.CaixaDeSomStatus == "Ligado"){
-                                        $("#CaixaDeSom").prop('checked', true);
+                                                                                                                     
+                                if(result.CaixaDeSomStatus == "Ligado" && CaixaDeSom_LocalStatus == false){
+                                        $("#toggleCaixaDeSom").toggleClass('toggle-on');
                                         $("#CaixaDeSomDiv").fadeIn(200);                                                    
-                                }else if (result.CaixaDeSomStatus == "Desligado"){
-                                        $("#CaixaDeSom").prop('checked', false);
+                                }else if (result.CaixaDeSomStatus == "Desligado" && CaixaDeSom_LocalStatus == true){
+                                        $("#toggleCaixaDeSom").toggleClass('toggle-on');
                                         $("#CaixaDeSomDiv").fadeOut(200);
                                 }
-                                if(result.FitaLedStatus == "Ligado"){
-                                        $("#FitaLed").prop('checked', true);
+                                if(result.FitaLedStatus == "Ligado" && FitaLed_LocalStatus == false){
+                                        $("#toggleFitaLed").toggleClass('toggle-on');
                                         $("#FitaLedDiv").fadeIn(200);
-                                }else if (result.FitaLedStatus == "Desligado"){
-                                        $("#FitaLed").prop('checked', false);
+                                }else if (result.FitaLedStatus == "Desligado" && FitaLed_LocalStatus == true){
+                                        $("#toggleFitaLed").toggleClass('toggle-on');
                                         $("#FitaLedDiv").fadeOut(200);
                                 }
-                                if(result.LedPcStatus == "Ligado"){
-                                        $("#LedPc").prop('checked', true);
+                                if(result.LedPcStatus == "Ligado" && LedPc_LocalStatus == false){
+                                        $("#toggleLedPc").toggleClass('toggle-on');
                                         $("#LedPcDiv").fadeIn(200);
-                                }else if (result.LedPcStatus == "Desligado"){
-                                        $("#LedPc").prop('checked', false);
+                                }else if (result.LedPcStatus == "Desligado" && LedPc_LocalStatus == true){
+                                        $("#toggleLedPc").toggleClass('toggle-on');
                                         $("#LedPcDiv").fadeOut(200);
                                 }
                                     console.log(result);
