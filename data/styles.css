@@ -1,16 +1,38 @@
 
-@azul-principal: #00bcd4;
-@azul-hover: #339ead;
+.body{
+    
+    background-color: #121212; 
+    max-width: 100%; 
+    overflow-x: hidden;
+
+}
 
 .text-labels{
-
 color: #5a585f;
 transition: color 0.6s ease-out;
 }
 
 .text-labels-on {
 color: #00bcd4;
-}    
+}
+
+.button-simple{
+
+    font-size: 27px;
+    max-width: 70px;
+}
+
+.card{
+
+    display: none; 
+    background-color: #191919; 
+    border-radius:30px;
+}
+.main-card{
+
+    background-color: #191919; 
+    border-radius:30px;
+}
 
 .glow-on-hover {
 width: 220px;
@@ -58,7 +80,13 @@ border-radius: 20px;
 -webkit-transition: border-color .6s  ease-out;
 transition: border-color .6s  ease-out;
 box-sizing: border-box;
-}   
+
+} 
+
+.scale-toggle{
+
+    transform: scale(0.8);
+}
 
 .form-switch:hover .text-labels {
 

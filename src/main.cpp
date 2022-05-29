@@ -14,6 +14,7 @@ int count = 0;
 String CaixaDeSomStatus = "Desligado";
 String FitaLedStatus = "Desligado";
 String LedPcStatus = "Desligado";
+String FitaLedColor = "rgb(0,0,0)";
 
 
 
@@ -73,91 +74,94 @@ void setup() {
   Serial.println("System Log:");
   Serial.println("\n");
   
-  servidor.on("/home/",HTTP_POST, [&]( AsyncWebServerRequest *request){
- 
+  servidor.on("/home/",HTTP_POST, [&]( AsyncWebServerRequest *request){ 
           
     Serial.println("-> POST Request on /home/ - " + request->client()->remoteIP().toString());  //System Log
 
-      String CaixaDeSomCMD;
-      String FitaLedCMD;
-      String LedPcCMD;
+    String CaixaDeSomCMD;
+    String FitaLedCMD;
+    String LedPcCMD;
 
-       if(request->hasArg("CaixaDeSom")){
+    if(request->hasArg("CaixaDeSom")){
 
-          CaixaDeSomCMD = request->arg("CaixaDeSom");
+        CaixaDeSomCMD = request->arg("CaixaDeSom");
 
-          if(CaixaDeSomCMD == "1")
-          {
-            CaixaDeSomStatus = "Ligado";
-            digitalWrite(LED_BUILTIN, LOW);
-            request->send(200, "text/plain", "Caixa de Som - Ligada");
+        if(CaixaDeSomCMD == "1")
+        {
+          CaixaDeSomStatus = "Ligado";
+          digitalWrite(LED_BUILTIN, LOW);
+          request->send(200, "text/plain", "Caixa de Som - Ligada");
 
-          }else if(CaixaDeSomCMD = "0")
-          {
-            CaixaDeSomStatus = "Desligado";
-            digitalWrite(LED_BUILTIN, HIGH);
-            request->send(200, "text/plain", "Caixa de Som - Desligada");
-          }         
-         else {
-            request->send(406, "text/plain", "Argumento invalido");
-          }
-
+        }else if(CaixaDeSomCMD = "0")
+        {
+          CaixaDeSomStatus = "Desligado";
+          digitalWrite(LED_BUILTIN, HIGH);
+          request->send(200, "text/plain", "Caixa de Som - Desligada");
+        }         
+        else {
+          request->send(406, "text/plain", "Argumento invalido");
         }
-        if(request->hasArg("FitaLed")){
 
-          FitaLedCMD = request->arg("FitaLed");
+      }
+    if(request->hasArg("FitaLed")){
 
-          if(FitaLedCMD == "1")
-          {
-            FitaLedStatus = "Ligado";
-            request->send(200, "text/plain", "Fita Led - Ligada");
+      FitaLedCMD = request->arg("FitaLed");
 
-          }else if(FitaLedCMD = "0")
-          {
-            FitaLedStatus = "Desligado";
-            request->send(200, "text/plain", "Fita Led - Desligada");
-          }         
-         else {
-            request->send(406, "text/plain", "Argumento invalido");
-          }
+      if(FitaLedCMD == "1")
+      {
+        FitaLedStatus = "Ligado";
+        request->send(200, "text/plain", "Fita Led - Ligada");
 
-        }
-        if(request->hasArg("LedPc")){
+      }else if(FitaLedCMD = "0")
+      {
+        FitaLedStatus = "Desligado";
+        request->send(200, "text/plain", "Fita Led - Desligada");
+      }         
+      else {
+        request->send(406, "text/plain", "Argumento invalido");
+      }
 
-          LedPcCMD = request->arg("LedPc");
+    }
+    if(request->hasArg("LedPc")){
 
-          if(LedPcCMD == "1")
-          {
-            LedPcStatus = "Ligado";
-            request->send(200, "text/plain", "Led PC - Ligada");
+      LedPcCMD = request->arg("LedPc");
 
-          }else if(LedPcCMD = "0")
-          {
-            LedPcStatus = "Desligado";
-            request->send(200, "text/plain", "Led PC - Desligada");
-          }         
-         else {
-            request->send(406, "text/plain", "Argumento invalido");
-          }
+      if(LedPcCMD == "1")
+      {
+        LedPcStatus = "Ligado";
+        request->send(200, "text/plain", "Led PC - Ligada");
 
-        }
+      }else if(LedPcCMD = "0")
+      {
+        LedPcStatus = "Desligado";
+        request->send(200, "text/plain", "Led PC - Desligada");
+      }         
+      else {
+        request->send(406, "text/plain", "Argumento invalido");
+      }
+
+    }
+    if(request->hasArg("FitaLedColor")){
+
+      FitaLedColor = request->arg("FitaLedColor");
+      request->send(200, "text/plain", FitaLedColor);
+
+    }
   });
 
-    servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request){
-
-    
-        AsyncResponseStream *response = request->beginResponseStream("application/json");
-        DynamicJsonDocument doc(1024);    
-        JsonObject obj = doc.to<JsonObject>();   
-        obj[String("CaixaDeSomStatus")] = CaixaDeSomStatus;
-        obj[String("FitaLedStatus")] = FitaLedStatus;
-        obj[String("LedPcStatus")] = LedPcStatus;
-        serializeJson(doc, *response);  
-        request->send(response);  
-
-
+  servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request){
+  
+    AsyncResponseStream *response = request->beginResponseStream("application/json");
+    DynamicJsonDocument doc(1024);    
+    JsonObject obj = doc.to<JsonObject>();   
+    obj[String("CaixaDeSomStatus")] = CaixaDeSomStatus;
+    obj[String("FitaLedStatus")] = FitaLedStatus;
+    obj[String("LedPcStatus")] = LedPcStatus;
+    obj[String("FitaLedColor")] = FitaLedColor;
+    serializeJson(doc, *response);  
+    request->send(response);  
+  
   });
-
 
 }
 
