@@ -19,7 +19,8 @@ color: #00bcd4;
 .button-simple{
 
     font-size: 27px;
-    max-width: 70px;
+    max-width: 80px;
+    font-size: 13px;
 }
 
 .card{
@@ -64,6 +65,14 @@ color: #1a1a1a;
 background: #00bcd4;
 box-shadow: #00bcd4 ;
 }
+
+.mute {
+    border-color: #d40400;
+    transition: border-color .6s  ease-out;
+    color: #d40400;
+    background: #191919;
+    box-shadow: #d40400 ;
+    }
 
 
 #switch{

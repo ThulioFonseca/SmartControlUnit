@@ -15,7 +15,7 @@ String CaixaDeSomStatus = "Desligado";
 String FitaLedStatus = "Desligado";
 String LedPcStatus = "Desligado";
 String FitaLedColor = "rgb(0,0,0)";
-
+String MuteStatus = "OFF";
 
 
 void Spinner(int counter)                         //Load Console Spinner
@@ -147,17 +147,24 @@ void setup() {
       request->send(200, "text/plain", FitaLedColor);
 
     }
+    if(request->hasArg("Mute")){
+
+      MuteStatus = request->arg("Mute");
+      request->send(200, "text/plain", "Mute: " + MuteStatus);
+
+    }
   });
 
   servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request){
   
     AsyncResponseStream *response = request->beginResponseStream("application/json");
-    DynamicJsonDocument doc(1024);    
+    DynamicJsonDocument doc(2048);    
     JsonObject obj = doc.to<JsonObject>();   
     obj[String("CaixaDeSomStatus")] = CaixaDeSomStatus;
     obj[String("FitaLedStatus")] = FitaLedStatus;
     obj[String("LedPcStatus")] = LedPcStatus;
-    obj[String("FitaLedColor")] = FitaLedColor;
+    obj[String("FitaLedColorStatus")] = FitaLedColor;
+    obj[String("MuteStatus")] = MuteStatus;
     serializeJson(doc, *response);  
     request->send(response);  
   
