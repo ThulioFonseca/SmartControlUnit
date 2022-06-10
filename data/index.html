@@ -14,7 +14,7 @@
 </head>
 <body class="body" onload="UpdateRoutine()">   
 
-<!-- ========================================================================[ Nav-Bar ]==================================================================  -->
+<!-- ========================================================================[ Nav-Bar ]===================================================================================  -->
         
     <div class="row shadow">
         <div class="pt-2 pb-4" style="background-color: #1a1a1a;  ">                                       
@@ -29,7 +29,7 @@
         </div>
     </div>
     
-<!-- ========================================================================[ CARD-Principal ]==================================================================  -->
+<!-- ========================================================================[ CARD-Principal ]============================================================================  -->
 
     <div class="container main-card col-md-6 h-100 mt-4 mb-3 py-4 shadow">
         <h3 class="fs-5 row text-center text-light self-align-center fw-light">
@@ -90,7 +90,7 @@
         </div>
     </div>
 
-<!-- ========================================================================[CARD - Sistema de Som ]=================================================================== -->
+<!-- ========================================================================[CARD - Sistema de Som ]======================================================================= -->
 
     <div id="CaixaDeSomDiv" class="container card col-md-6 h-100 mt-4 mb-3 py-3 shadow">
         <div>
@@ -174,7 +174,7 @@
                         <div id="FitaLedPicker" class="ColorPicker mx-3"></div>
                     </div>
                     <div class="d-flex mx-1 my-2 px-1 form-check form-switch  justify-content-center ">                                       
-                        <button class="glow-on-hover mx-3 button-simple fs-3" type="button">
+                        <button id="FitaLed_BrightnessDOWN" class="glow-on-hover mx-3 button-simple fs-3" type="button">
                             <span class="txt-glow">
                                 -
                             </span>
@@ -184,7 +184,7 @@
                                 Brilho
                             </label>
                         </div>
-                        <button class="glow-on-hover mx-3 button-simple fs-3" type="button">
+                        <button id="FitaLed_BrightnessUP" class="glow-on-hover mx-3 button-simple fs-3" type="button">
                             <span class="txt-glow">
                                 +
                             </span>
@@ -195,7 +195,7 @@
             </div>   
         </div> 
         
-<!-- ========================================================================[CARD - RGB do Computador ]================================================================= -->
+<!-- ========================================================================[CARD - RGB do Computador ]=================================================================== -->
 
         <div  id="LedPcDiv" class="container card col-md-6 h-100 mt-4 mb-3 py-4 text-center shadow">
             <h3 class="fs-5 row text-center text-light self-align-center fw-light">
@@ -235,7 +235,7 @@
             </div>
         </div>
 
-<!-- ========================================================================[ Scripts ]================================================================= -->
+<!-- ========================================================================[ Scripts ]=================================================================================== -->
         
 <script type="text/javascript">
     
@@ -286,6 +286,71 @@
                 });
             });
 
+        $("#volumeUp").on('click',function(e){
+            e.preventDefault(); // The flicker is a codepen thing                
+
+            $.ajax({
+                url: '/home/',
+                type : "POST",
+                data :{
+                        Volume: UP
+                        },
+                success : function(result) {
+                    console.log(result);
+                },
+                error: function() {
+                    console.log(result);
+                }
+            });
+        });
+
+        $("#volumeDown").on('click',function(e){
+            e.preventDefault(); // The flicker is a codepen thing                
+
+            $.ajax({
+                url: '/home/',
+                type : "POST",
+                data :{
+                        Volume: DOWN
+                        },
+                success : function(result) {
+                    console.log(result);
+                },
+                error: function() {
+                    console.log(result);
+                }
+            });
+        });
+
+        $("#mute").on('click',function(e){
+            e.preventDefault(); // The flicker is a codepen thing                
+            
+            var muteStatus = this.classList.contains('mute');
+            var muteValue = "OFF";            
+            this.classList.toggle('mute');
+
+            if(muteStatus){
+                muteValue = "OFF";
+            }
+            else{
+                muteValue = "ON";
+            }
+            
+            $.ajax({
+                url: '/home/',
+                type : "POST",
+                data :{
+                        Mute: muteValue
+                        },
+                success : function(result) {
+                    console.log(result);
+                },
+                error: function() {
+                    console.log(result);
+                }
+            });
+        });
+
         $("#toggleFitaLed").on('click',function(e){
             e.preventDefault(); // The flicker is a codepen thing                
 
@@ -308,6 +373,42 @@
                 type : "POST",
                 data :{
                         FitaLed: value
+                        },
+                success : function(result) {
+                    console.log(result);
+                },
+                error: function() {
+                    console.log(result);
+                }
+            });
+        });
+
+        $("#FitaLed_BrightnessUP").on('click',function(e){
+            e.preventDefault(); // The flicker is a codepen thing                
+
+            $.ajax({
+                url: '/home/',
+                type : "POST",
+                data :{
+                        FitaLed_Brightness: "UP"
+                        },
+                success : function(result) {
+                    console.log(result);
+                },
+                error: function() {
+                    console.log(result);
+                }
+            });
+        });
+
+        $("#FitaLed_BrightnessDOWN").on('click',function(e){
+            e.preventDefault(); // The flicker is a codepen thing                
+
+            $.ajax({
+                url: '/home/',
+                type : "POST",
+                data :{
+                        FitaLed_Brightness: "DOWN"
                         },
                 success : function(result) {
                     console.log(result);
@@ -350,70 +451,6 @@
             });
         });
 
-        $("#volumeUp").on('click',function(e){
-            e.preventDefault(); // The flicker is a codepen thing                
-
-            $.ajax({
-                url: '/home/',
-                type : "POST",
-                data :{
-                        Volume: UP
-                        },
-                success : function(result) {
-                    console.log(result);
-                },
-                error: function() {
-                    console.log(result);
-                }
-            });
-        });
-
-        $("#volumeDown").on('click',function(e){
-            e.preventDefault(); // The flicker is a codepen thing                
-
-            $.ajax({
-                url: '/home/',
-                type : "POST",
-                data :{
-                        Volume: DOWN
-                        },
-                success : function(result) {
-                    console.log(result);
-                },
-                error: function() {
-                    console.log(result);
-                }
-            });
-        });
-
-        $("#mute").on('click',function(e){
-            e.preventDefault(); // The flicker is a codepen thing                
-           
-            var muteStatus = this.classList.contains('mute');
-            var muteValue = "OFF";            
-            this.classList.toggle('mute');
-
-            if(muteStatus){
-                muteValue = "OFF";
-            }
-            else{
-                muteValue = "ON";
-            }
-            
-            $.ajax({
-                url: '/home/',
-                type : "POST",
-                data :{
-                        Mute: muteValue
-                        },
-                success : function(result) {
-                    console.log(result);
-                },
-                error: function() {
-                    console.log(result);
-                }
-            });
-        });
 
         colorPickerFitaLed.on('input:end', function(color) {
             var FitaLedColor = color.rgbString;
@@ -430,7 +467,6 @@
                         FitaLed_red: _red,
                         FitaLed_green: _green,
                         FitaLed_blue: _blue
-
                         },
                 success : function(result) {
                     console.log(result);

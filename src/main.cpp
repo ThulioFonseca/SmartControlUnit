@@ -23,6 +23,7 @@ String MuteStatus = "OFF";
 int FitaLed_red = 0;
 int FitaLed_green = 0;
 int FitaLed_blue = 0;
+float FitaLed_Brightness = 255.0;
 
 
 
@@ -74,6 +75,7 @@ void ServerConfig(){                              //Configure Web Server
 
 void setup() {
   FastLED.addLeds<NEOPIXEL,5>(leds, NUM_LEDS);
+  
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(115200);
 
@@ -161,6 +163,34 @@ void setup() {
       request->send(200, "text/plain", "Cores recebidas" );
 
     }
+
+    if(request->hasArg("FitaLed_Brightness")){
+
+      if(request->arg("FitaLed_Brightness") == "UP"){
+
+        if(FitaLed_Brightness < 255.0){
+
+          FitaLed_Brightness = FitaLed_Brightness + 25.5;          
+        }
+         
+        request->send(200, "text/plain", "Brilho da Fita Led aumentado" + (String)FitaLed_Brightness); 
+      }   
+
+      else if(request->arg("FitaLed_Brightness") == "DOWN"){
+
+        if(FitaLed_Brightness > 0.0){
+
+          FitaLed_Brightness = FitaLed_Brightness - 25.5;          
+        }
+        
+        request->send(200, "text/plain", "Brilho da Fita Led diminuido" + (String)FitaLed_Brightness);
+      }
+      else{
+        request->send(406, "text/plain", "Argumento invalido");
+      }
+
+     }
+    
     if(request->hasArg("Mute")){
 
       MuteStatus = request->arg("Mute");
@@ -194,17 +224,15 @@ void loop() {
       {
         FastLED.delay(33);
         leds[i] = CRGB(FitaLed_red,FitaLed_green,FitaLed_blue);
+        FastLED.setBrightness((int)FitaLed_Brightness);
+        FastLED.show();
        
       }
 
   }else{
       
-    for(int i = 0; i < NUM_LEDS; i++)
-      {
-        FastLED.delay(33);
-        leds[i] = CRGB(0,0,0);
-      
-      }
+    FastLED.setBrightness(0);
+    FastLED.show();
 
   }
 
