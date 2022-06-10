@@ -417,12 +417,20 @@
 
         colorPickerFitaLed.on('input:end', function(color) {
             var FitaLedColor = color.rgbString;
-            console.log(FitaLedColor);
+            var _red = color.rgb.r;
+            var _green = color.rgb.g;
+            var _blue = color.rgb.b;
+
+            console.log(_red + " " + _green + " " + _blue);
             $.ajax({
                 url: '/home/',
                 type : "POST",
                 data :{
-                        FitaLedColor: FitaLedColor
+                        FitaLedColor: FitaLedColor,
+                        FitaLed_red: _red,
+                        FitaLed_green: _green,
+                        FitaLed_blue: _blue
+
                         },
                 success : function(result) {
                     console.log(result);

@@ -6,7 +6,11 @@
 #include <LittleFS.h>          
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <FastLED.h>
 
+#define NUM_LEDS 16
+
+CRGBArray<NUM_LEDS> leds;
 AsyncWebServer servidor(80);
 const char* ssid     = "Oi velox";            // The SSID (name) of the Wi-Fi network you want to connect to
 const char* password = "Oi130987";            // The password of the Wi-Fi network
@@ -16,6 +20,11 @@ String FitaLedStatus = "Desligado";
 String LedPcStatus = "Desligado";
 String FitaLedColor = "rgb(0,0,0)";
 String MuteStatus = "OFF";
+int FitaLed_red = 0;
+int FitaLed_green = 0;
+int FitaLed_blue = 0;
+
+
 
 
 void Spinner(int counter)                         //Load Console Spinner
@@ -64,9 +73,10 @@ void ServerConfig(){                              //Configure Web Server
 }
 
 void setup() {
-
+  FastLED.addLeds<NEOPIXEL,5>(leds, NUM_LEDS);
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(115200);
+
   
   NetConfig();
   ServerConfig();
@@ -141,10 +151,14 @@ void setup() {
       }
 
     }
-    if(request->hasArg("FitaLedColor")){
+    if(request->hasArg("FitaLed_red" ) && request->hasArg("FitaLed_green") && request->hasArg("FitaLed_blue")&& request->hasArg("FitaLedColor")){
 
       FitaLedColor = request->arg("FitaLedColor");
-      request->send(200, "text/plain", FitaLedColor);
+       FitaLed_red = request->arg("FitaLed_red").toInt();
+       FitaLed_green = request->arg("FitaLed_green").toInt();
+       FitaLed_blue = request->arg("FitaLed_blue").toInt();
+        
+      request->send(200, "text/plain", "Cores recebidas" );
 
     }
     if(request->hasArg("Mute")){
@@ -173,5 +187,26 @@ void setup() {
 }
 
 void loop() {
+
+  if(FitaLedStatus == "Ligado"){  
+
+   for(int i = 0; i < NUM_LEDS; i++)
+      {
+        FastLED.delay(33);
+        leds[i] = CRGB(FitaLed_red,FitaLed_green,FitaLed_blue);
+       
+      }
+
+  }else{
+      
+    for(int i = 0; i < NUM_LEDS; i++)
+      {
+        FastLED.delay(33);
+        leds[i] = CRGB(0,0,0);
+      
+      }
+
+  }
+
 }
   
