@@ -1,92 +1,107 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
-#include <ESP8266WiFi.h>          
+#include <ESP8266WiFi.h>
 #include <DNSServer.h>
-#include <LittleFS.h>          
+#include <LittleFS.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#define FASTLED_ALLOW_INTERRUPTS 0
+#define FASATLED_INTERRUPT_RETRY_COUNT 1
 #include <FastLED.h>
 
 #define NUM_LEDS 16
 
 CRGBArray<NUM_LEDS> leds;
 AsyncWebServer servidor(80);
-const char* ssid     = "Oi velox";            // The SSID (name) of the Wi-Fi network you want to connect to
-const char* password = "Oi130987";            // The password of the Wi-Fi network
+const char *ssid = "Oi velox";     // The SSID (name) of the Wi-Fi network you want to connect to
+const char *password = "Oi130987"; // The password of the Wi-Fi network
 int count = 0;
 String CaixaDeSomStatus = "Desligado";
 String FitaLedStatus = "Desligado";
 String LedPcStatus = "Desligado";
-String FitaLedColor = "rgb(0,0,0)";
+String FitaLedColor = "rgb(102,255,255)";
 String MuteStatus = "OFF";
-int FitaLed_red = 0;
-int FitaLed_green = 0;
-int FitaLed_blue = 0;
+int FitaLed_red = 102;
+int FitaLed_green = 255;
+int FitaLed_blue = 255;
 float FitaLed_Brightness = 255.0;
 
+void Spinner(int counter) // Load Console Spinner
+{
+  switch (counter % 4)
+  {
+  case 0:
+    Serial.print("/");
+    break;
+  case 1:
+    Serial.print("-");
+    break;
+  case 2:
+    Serial.print("\\");
+    break;
+  case 3:
+    Serial.print("|");
+    break;
+  }
+  delay(150);
+  Serial.print("\b \b");
+}
 
+void NetConfig()
+{ // Configure Wifi Network
 
+  IPAddress ip(192, 168, 1, 54);    
+  IPAddress gateway(192, 168, 1, 1); 
+  IPAddress subnet(255, 255, 255, 0);
 
-void Spinner(int counter)                         //Load Console Spinner
-    {
-        switch (counter % 4)
-        {
-            case 0: Serial.print("/"); break;
-            case 1:  Serial.print("-"); break;
-            case 2:  Serial.print("\\"); break;
-            case 3:  Serial.print("|"); break;
-        }
-        delay(150);
-        Serial.print("\b \b");
-    }
-
-void NetConfig(){                                 //Configure Wifi Network
-
-  Serial.println("\n");
+      Serial.println("\n");
   Serial.println("=====================[ Advanced Control Unit ]=====================");
-  Serial.println("\n");                            
-  WiFi.begin(ssid, password);                     // Connect to the network
+  Serial.println("\n");
+  WiFi.begin(ssid, password); // Connect to the network
+  WiFi.config(ip, gateway, subnet);
   Serial.print("Connecting to ");
-  Serial.print(ssid); Serial.print(" ");
+  Serial.print(ssid);
+  Serial.print(" ");
 
-  while (WiFi.status() != WL_CONNECTED) {         // Wait for the Wi-Fi to connect
+  while (WiFi.status() != WL_CONNECTED)
+  { // Wait for the Wi-Fi to connect
     Spinner(count);
     count++;
-   }
+  }
   Serial.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b                      ");
-  Serial.println("Connection established!");  
+  Serial.println("Connection established!");
   Serial.println('\n');
   Serial.print("IP address..............: ");
-  Serial.println(WiFi.localIP());                 
-
+  Serial.println(WiFi.localIP());
 }
 
-void ServerConfig(){                              //Configure Web Server
+void ServerConfig()
+{ // Configure Web Server
 
   servidor.serveStatic("/home", LittleFS, "/");
-  LittleFS.begin();                                              // Inicializa o sistema de arquivos
+  LittleFS.begin(); // Inicializa o sistema de arquivos
   Serial.println("LittleFS................: Running");
-  servidor.begin();                                              // Inicializa o servidor web
+  servidor.begin(); // Inicializa o servidor web
   Serial.println("WEB-Server..............: Running");
   Serial.println('\n');
-  
 }
 
-void setup() {
-  FastLED.addLeds<NEOPIXEL,5>(leds, NUM_LEDS);
-  
+void setup()
+{
+  FastLED.addLeds<NEOPIXEL, 5>(leds, NUM_LEDS);
+
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(115200);
 
-  
   NetConfig();
   ServerConfig();
 
   Serial.println("System Log:");
   Serial.println("\n");
-  
-  servidor.on("/home/",HTTP_POST, [&]( AsyncWebServerRequest *request){ 
+
+  servidor.on("/home/", HTTP_POST, [&](AsyncWebServerRequest *request)
+              { 
           
     Serial.println("-> POST Request on /home/ - " + request->client()->remoteIP().toString());  //System Log
 
@@ -163,7 +178,6 @@ void setup() {
       request->send(200, "text/plain", "Cores recebidas" );
 
     }
-
     if(request->hasArg("FitaLed_Brightness")){
 
       if(request->arg("FitaLed_Brightness") == "UP"){
@@ -190,51 +204,49 @@ void setup() {
       }
 
      }
-    
     if(request->hasArg("Mute")){
 
       MuteStatus = request->arg("Mute");
       request->send(200, "text/plain", "Mute: " + MuteStatus);
 
-    }
-  });
+    } });
 
-  servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request){
-  
-    AsyncResponseStream *response = request->beginResponseStream("application/json");
-    DynamicJsonDocument doc(2048);    
-    JsonObject obj = doc.to<JsonObject>();   
-    obj[String("CaixaDeSomStatus")] = CaixaDeSomStatus;
-    obj[String("FitaLedStatus")] = FitaLedStatus;
-    obj[String("LedPcStatus")] = LedPcStatus;
-    obj[String("FitaLedColorStatus")] = FitaLedColor;
-    obj[String("MuteStatus")] = MuteStatus;
-    serializeJson(doc, *response);  
-    request->send(response);  
-  
-  });
+  servidor.on("/home/", HTTP_GET, [&](AsyncWebServerRequest *request)
+              {
+                AsyncResponseStream *response = request->beginResponseStream("application/json");
+                DynamicJsonDocument doc(2048);
+                JsonObject obj = doc.to<JsonObject>();
+                obj[String("CaixaDeSomStatus")] = CaixaDeSomStatus;
+                obj[String("FitaLedStatus")] = FitaLedStatus;
+                obj[String("LedPcStatus")] = LedPcStatus;
+                obj[String("FitaLedColorStatus")] = FitaLedColor;
+                obj[String("MuteStatus")] = MuteStatus;
+                serializeJson(doc, *response);
+                request->send(response); });
 
+  yield();
 }
 
-void loop() {
+void loop()
+{
 
-  if(FitaLedStatus == "Ligado"){  
+  if (FitaLedStatus == "Ligado")
+  {
 
-   for(int i = 0; i < NUM_LEDS; i++)
-      {
-        FastLED.delay(33);
-        leds[i] = CRGB(FitaLed_red,FitaLed_green,FitaLed_blue);
-        FastLED.setBrightness((int)FitaLed_Brightness);
-        FastLED.show();
-       
-      }
-
-  }else{
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+      leds[i] = CRGB(FitaLed_red, FitaLed_green, FitaLed_blue);
+      FastLED.setBrightness((int)FitaLed_Brightness);
+      yield();
       
-    FastLED.setBrightness(0);
-    FastLED.show();
-
+    }
   }
+  else
+  {
+
+    FastLED.setBrightness(0);
+    
+  }
+  FastLED.show();
 
 }
-  
